@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -50,12 +51,13 @@ public class Wordcracker {
     static void run(String[] args) {
         Params params = parseParams(args);
 
-
         Wordcracker wordcracker = new Wordcracker();
         if (params.dictionaries().list() != null) {
 
             Stream.of(requireNonNull(params.dictionaries().list()))
                   .map(name -> new File(params.dictionaries(), name))
+                  .filter(File::exists)
+                  .filter(File::isFile)
                   .forEach(file -> {
                       try {
                           try (BufferedReader reader = new BufferedReader(
